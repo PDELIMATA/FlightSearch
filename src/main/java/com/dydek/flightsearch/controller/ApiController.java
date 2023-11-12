@@ -2,59 +2,43 @@ package com.dydek.flightsearch.controller;
 
 import com.amadeus.exceptions.ResponseException;
 import com.amadeus.resources.*;
+import com.dydek.flightsearch.DatabaseConnect;
 import com.dydek.flightsearch.config.AmadeusConnection;
+import com.google.gson.JsonObject;
 import org.springframework.web.bind.annotation.*;
 
 
 @RestController
 public class ApiController {
-    @GetMapping("/")
-    public String landingPage() {
-        return "";
-    }
 
     @GetMapping("/locations")
-    public String airportLocations(@RequestParam() String keyword) {
-        try {
-            Location[] results = AmadeusConnection.INSTANCE.airportLocation(keyword);
-            return AmadeusConnection.INSTANCE.toJson(results[0]);
-        } catch (ResponseException e) {
-            return e.getDescription();
-        }
+    public Location[] airportLocations(@RequestParam() String keyword) throws ResponseException {
+        return AmadeusConnection.INSTANCE.airportLocation(keyword);
     }
 
     @GetMapping("/offers")
-    public String flightOffers(@RequestParam() String originCode,
-                               @RequestParam() String destinationCode,
-                               @RequestParam() String departDate,
-                               @RequestParam() String adultsNumber,
-                               @RequestParam(defaultValue = "") String returnDate) {
-        try {
-            FlightOfferSearch[] flightOfferSearches = AmadeusConnection.INSTANCE.flightOfferSearches(originCode, destinationCode, departDate, returnDate, adultsNumber);
-            return AmadeusConnection.INSTANCE.toJson(flightOfferSearches[0]);
-        } catch (ResponseException e) {
-            return e.getDescription();
-        }
+    public FlightOfferSearch[] flightOffers(@RequestParam() String originCode,
+                                            @RequestParam() String destinationCode,
+                                            @RequestParam() String departDate,
+                                            @RequestParam() String adultsNumber,
+                                            @RequestParam(defaultValue = "") String returnDate) throws ResponseException {
+
+        return AmadeusConnection.INSTANCE.flightOfferSearches(originCode, destinationCode, departDate, returnDate, adultsNumber);
     }
 
     @PostMapping("/confirm")
-    public String confirmFlightPrice(@RequestBody() FlightOfferSearch flightOfferSearch) {
-        try {
-            FlightPrice flightPrice = AmadeusConnection.INSTANCE.confirmFlightPrice(flightOfferSearch);
-            return AmadeusConnection.INSTANCE.toJson(flightPrice);
-        } catch (ResponseException e) {
-            return e.getDescription();
-        }
+    public FlightPrice confirmFlightPrice(@RequestBody() FlightOfferSearch flightOfferSearch) throws ResponseException {
+        return AmadeusConnection.INSTANCE.confirmFlightPrice(flightOfferSearch);
+    }
+
+    @PostMapping("/traveler")
+    public Traveler traveler(@RequestBody() JsonObject travelerInfo) {
+        return DatabaseConnect.traveler(travelerInfo.get("data").getAsJsonObject());
     }
 
     @GetMapping("/order")
-    public String flightOrder(@RequestBody() FlightPrice flightPrice, Traveler[] travelers) {
-        try {
-            FlightOrder results = AmadeusConnection.INSTANCE.flightOrder(flightPrice, travelers);
-            return AmadeusConnection.INSTANCE.toJson(results);
-        } catch (ResponseException e) {
-            return e.getDescription();
-        }
+    public FlightOrder flightOrder(@RequestBody() JsonObject flightOrder) throws ResponseException {
+        return AmadeusConnection.INSTANCE.flightOrder(flightOrder);
     }
 }
 

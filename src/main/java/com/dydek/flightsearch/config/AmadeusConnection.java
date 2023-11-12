@@ -5,6 +5,7 @@ import com.amadeus.Params;
 import com.amadeus.exceptions.ResponseException;
 import com.amadeus.referenceData.Locations;
 import com.amadeus.resources.*;
+import com.google.gson.JsonObject;
 
 public enum AmadeusConnection {
 
@@ -15,10 +16,6 @@ public enum AmadeusConnection {
         this.amadeus = Amadeus
                 .builder("AMADEUS_CLIENT_ID", "AMADEUS_CLIENT_SECRET")
                 .build();
-    }
-
-    public String toJson(Resource resource) {
-        return resource.getResponse().getBody();
     }
 
     public Location[] airportLocation(String keyword) throws ResponseException {
@@ -42,7 +39,7 @@ public enum AmadeusConnection {
         return amadeus.shopping.flightOffersSearch.pricing.post(offer);
     }
 
-    public FlightOrder flightOrder(FlightPrice price, Traveler[] traveler) throws ResponseException {
-        return amadeus.booking.flightOrders.post(price, traveler);
+    public FlightOrder flightOrder(JsonObject flightOrder) throws ResponseException {
+        return amadeus.booking.flightOrders.post(flightOrder);
     }
 }
