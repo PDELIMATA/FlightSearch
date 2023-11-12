@@ -49,6 +49,6 @@ function Flight(props) {
             <FlightSelect flightOptions={flightOptions} setFlight={props.setFlight} />
         </div>
     );
-};
+}
 
 export default Flight;

@@ -23,6 +23,6 @@ function Locate(props) {
             <LocationSelect data={locations} handleChoice={props.handleChoice} />
         </div>
     );
-};
+}
 
 export default Locate;

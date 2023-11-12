@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React from "react";
 
 function Confirm(props) {
 
-    function submit(event, props){
+    function submit(event, props) {
         event.preventDefault();
         fetch("api/confirm/", {
             method: "post",
@@ -21,7 +21,7 @@ function Confirm(props) {
     return (
         <div>
             <form onSubmit={(e) => submit(e, props)}>
-                <input type="submit" />
+                <input type="submit"/>
             </form>
             {props.order &&
                 <div>Confirmation:<br></br>
@@ -31,6 +31,6 @@ function Confirm(props) {
         </div>
 
     );
-};
+}
 
 export default Confirm;
